@@ -1,0 +1,20 @@
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: $header-height;
+    z-index: 100;
+    background: $white;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+
+    .logo {
+        display: block;
+        margin: auto;
+        font-size: 35px;
+        font-family: $serif;
+        text-align: center;
+        line-height: $header-height;
+        font-weight: bold;
+    }
+}

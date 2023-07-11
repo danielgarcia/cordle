@@ -1,2 +1,12 @@
+@import './components/Board';
+@import './components/Keyboard';
+
 .game-page {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    height: calc(100% - $header-height);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }

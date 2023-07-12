@@ -6,11 +6,30 @@
     grid-gap: 5px;
     padding: 10px;
     margin: auto;
+    position: relative;
+
+    .not-a-word-error {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px;
+        font-size: 12px;
+        border-radius: 5px;
+        background: $black;
+        color: $white;
+        z-index: 10;
+    }
 
     .board-row {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         grid-gap: 5px;
+        transition: transform $fast;
+
+        &.not-a-word {
+            animation: shake 0.2s linear 2;
+        }
         
         .board-tile {
             width: 100%;
@@ -27,21 +46,50 @@
             text-transform: uppercase;
             user-select: none;
             border: 2px solid #d3d6da;
+            transition: color $fast, border-color $fast, background-color $fast;
+
+            &.has-letter {
+                border-color: $black;
+            }
 
             &.correct {
                 border: none;
                 color: $white;
-                background-color: #6aaa64;
+                background-color: $color-correct;
             }
             &.maybe {
                 border: none;
                 color: $white;
-                background-color: #c9b458;
+                background-color: $color-maybe;
             }
             &.wrong {
                 border: none;
                 color: $white;
-                background-color: #787c7e;
+                background-color: $color-wrong;
+            }
+
+            &.flip {
+                animation: flip 750ms ease forwards;
+            }
+
+            &.delay1 {
+                animation-delay: 100ms;
+            }
+
+            &.delay2 {
+                animation-delay: 200ms;
+            }
+
+            &.delay3 {
+                animation-delay: 300ms;
+            }
+
+            &.delay4 {
+                animation-delay: 400ms;
+            }
+
+            &.delay5 {
+                animation-delay: 500ms;
             }
         }
     }

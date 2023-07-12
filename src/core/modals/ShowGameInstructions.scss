@@ -1,0 +1,64 @@
+.modal.game-instructions-modal {
+    z-index: 10000000;
+
+    .frame {
+        max-width: 500px;
+        background: $white;
+    }
+
+    .body {
+        text-align: left;
+        padding: 20px;
+        background: $white;
+        color: $black;
+        
+
+        .board.one-line {
+            width: 175px;
+            grid-template-rows: repeat(1, 1fr);
+            float: left;
+            padding: 0;
+            height: 30px;
+        }
+
+        h2 {
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: 0;
+            line-height: 30px;
+            text-transform: none;
+            text-align: left;
+            margin-bottom: 4px;
+            margin-top: 29px;
+            display: block;
+        }
+        
+        h3 {
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 24px;
+            margin: 0;
+        }
+
+        ul {
+            font-size: 16px;
+            line-height: 20px;
+            list-style-type: disc;
+            font-weight: 500;
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            padding-inline-start: 20px;
+            li {
+                margin-bottom: 4px;
+            }
+        }
+
+        p {
+            display: inline-block;
+            width: 100%;
+            margin: 10px 0 15px;
+            font-size: 16px;
+            line-height: 20px;
+        }
+    }
+}

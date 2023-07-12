@@ -2,9 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Row from './components/Row';
 import Keyboard from './components/Keyboard';
 import { UsedLetters, GameState, LetterState } from '../../core/CordleTypes';
+import { getWord } from '../../usecases/getWord';
+import { checkWord } from '../../usecases/checkWord';
+import { checkIfWordIsReal } from '../../usecases/checkIfWordIsReal';
 
 
 interface State {
+    wordID: number;
     word: string;
     tries: string[];
     triesResult: LetterState[][];
@@ -13,29 +17,47 @@ interface State {
     loading: boolean;
     usedLetters: UsedLetters;
     gameState: GameState;
+    notAWord: boolean;
 }
 
 export default function Game(): JSX.Element {
     const [ state, setState ] = useState<State>({
+        wordID: 0,
         word: '',
         tries: [],
         triesResult: [],
-        maxGuesses: 5,
+        maxGuesses: 6,
         checking: false,
         loading: false,
         usedLetters: {},
         gameState: 'playing',
+        notAWord: false,
     });
 
     // eslint-disable-next-line
     const handleKeyDown = useCallback((event: KeyboardEvent) => handleKeyPress(event.key), [handleKeyPress, state]);
 
     useEffect(() => {
+        // Need to fetch the word id
+        async function fetchData(): Promise<void> {;
+            const { wordID, err } = await getWord();
+            setState(prevState => ({ ...prevState, wordID }));
+        }
+        
+        // only fetch once.
+        if(!state.wordID) {
+            fetchData().catch();
+        }
+
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener("keydown", handleKeyDown);
-      }, [handleKeyDown]);
+    }, [handleKeyDown, state.wordID ]);
 
-
+    /**
+     * handles the pressing of a keyboard key.
+     * @param {string} key a keyboard key.
+     * @returns {void} void.
+     */
     function handleKeyPress(key: string): void {
         let {word, tries, maxGuesses, gameState } = state;
         if(tries.length === maxGuesses || gameState !== 'playing') return;
@@ -58,6 +80,11 @@ export default function Game(): JSX.Element {
         };
     }
 
+    /**
+     * It adds the new used letters to the usedLetters object.
+     * @param {UsedLetters} newLetters new used letter by the user.
+     * @returns {UsedLetters} all the letters the user has used.
+     */
     function processUsedLetters(newLetters: UsedLetters): UsedLetters {
         const { usedLetters } = state;
 
@@ -73,34 +100,44 @@ export default function Game(): JSX.Element {
         return usedLetters;
     }
 
-
+    /**
+     * Checks if the word is correct.
+     * @returns {Promise<void>} Promise<void>
+     */
     async function checkIfWordIsCorrect(): Promise<void> {
-        const { word, tries, maxGuesses, triesResult } = state;
+        const { word, tries, maxGuesses, triesResult, wordID } = state;
 
-        // check word api here
-        if (true) {
-            const checked: LetterState[] = ['correct','wrong','correct','maybe','wrong'];
-            const gameState: GameState = 'playing';
+        const { exists } = await checkIfWordIsReal(word);
+        if (exists) {
+            const { result, passed, err } = await checkWord(wordID, word);
+
             const usedLetters: UsedLetters = {};
-            usedLetters[word[0]] = checked[0];
-            usedLetters[word[1]] = checked[1];
-            usedLetters[word[2]] = checked[2];
-            usedLetters[word[3]] = checked[3];
-            usedLetters[word[4]] = checked[4];
+            usedLetters[word[0]] = result[0];
+            usedLetters[word[1]] = result[1];
+            usedLetters[word[2]] = result[2];
+            usedLetters[word[3]] = result[3];
+            usedLetters[word[4]] = result[4];
             
             tries.push(word);
-            triesResult.push(checked);
+            triesResult.push(result);
 
-            setState(prevState => ({ ...prevState, word: '', tries, triesResult, gameState, checking: false, usedLetters: processUsedLetters(usedLetters) }));
+            setState(prevState => ({ ...prevState, word: '', tries, triesResult, checking: false, usedLetters: processUsedLetters(usedLetters) }));
 
-            if(gameState === 'playing' && tries.length === maxGuesses) {
+            if(!passed && tries.length === maxGuesses) {
                 alert('lost!');
+                setState(prevState => ({ ...prevState, gameState: 'lost' }));
             }
 
-            // if(gameState === 'won') {
-            //     alert('won!');
-            // }
-        } else {} 
+            if(passed) {
+                alert('won!');
+                setState(prevState => ({ ...prevState, gameState: 'won' }));
+            }
+        } else {
+            setState(prevState => ({ ...prevState, notAWord: true }));
+            setTimeout(()=> {
+                setState(prevState => ({ ...prevState, notAWord: false }));
+            }, 1000)
+        } 
     };
 
     /**
@@ -108,12 +145,12 @@ export default function Game(): JSX.Element {
      * @returns {JSX.Element[]} returns array of html.
      */
     function renderBoardRows(): JSX.Element[] {
-        const { tries, maxGuesses, word, checking, triesResult } = state;
+        const { tries, maxGuesses, word, notAWord, triesResult } = state;
         const element: JSX.Element[] = [];
         for (let i = 0; i < maxGuesses; i++) {  
             // current try
             if((!tries[i] && tries[i - 1]) || (!tries[i] && i === 0)) {
-                element.push(<Row word={word} wordResult={triesResult[i]} key={`game-row-${i}`} />);
+                element.push(<Row word={word} wordResult={triesResult[i]} key={`game-row-${i}`} error={notAWord} />);
                 continue;
             }
             
@@ -133,6 +170,7 @@ export default function Game(): JSX.Element {
     return (
         <div className="game-page">
             <div className="board">
+                {state.notAWord && <div className="not-a-word-error">Not a Word</div>}
                 {renderBoardRows()}
             </div>
 

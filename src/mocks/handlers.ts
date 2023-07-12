@@ -9,17 +9,17 @@ type word = {
 export const handlers = [
     rest.post(`/api/v1/word/:wordID`, async (req, res, ctx) => {
         const wordID = Number(req.params.wordID);
-        const payload = await req.json<{ word: string }>();
-        const gameWordObject = words.find(word => word.id === wordID) || { id: wordID, word: ''};
+        const payload = await req.json<{ word: string; guesses: number; }>();
+        const gameWordObject = words.find(word => word.id === wordID) || { id: wordID, word: '' };
 
         const gameWord = gameWordObject.word;
         const checkingWord = payload.word.toUpperCase();
 
         const passed = gameWord === checkingWord;
-        const result = checkingWord.split('').map( (letter,i) => {
-          if (gameWord[i] === letter) return "correct";
-          if (gameWord.includes(letter)) return "maybe";
-          return "wrong"
+        const result = checkingWord.split('').map( (letter, i) => {
+            if (gameWord[i] === letter) return "correct";
+            if (gameWord.includes(letter)) return "maybe";
+            return "wrong"
         });
 
         return res(
@@ -28,6 +28,7 @@ export const handlers = [
             ctx.json({
                 result,
                 passed,
+                gameWord: payload.guesses === 6 ? gameWordObject : undefined,
             }),
         )
     }),

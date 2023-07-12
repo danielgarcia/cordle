@@ -5,6 +5,7 @@ import { UsedLetters, GameState, LetterState } from '../../core/CordleTypes';
 import { getWord } from '../../usecases/getWord';
 import { checkWord } from '../../usecases/checkWord';
 import { checkIfWordIsReal } from '../../usecases/checkIfWordIsReal';
+import { auth } from '../../core/services/auth';
 
 
 interface State {
@@ -109,7 +110,7 @@ export default function Game(): JSX.Element {
 
         const { exists } = await checkIfWordIsReal(word);
         if (exists) {
-            const { result, passed, err } = await checkWord(wordID, word);
+            const { result, passed, gameWord, err } = await checkWord(wordID, word, tries.length + 1);
 
             const usedLetters: UsedLetters = {};
             usedLetters[word[0]] = result[0];
@@ -124,12 +125,14 @@ export default function Game(): JSX.Element {
             setState(prevState => ({ ...prevState, word: '', tries, triesResult, checking: false, usedLetters: processUsedLetters(usedLetters) }));
 
             if(!passed && tries.length === maxGuesses) {
+                auth.loggedUser.addGamePlayed(gameWord || {id: -1, word}, false, 6);
                 alert('lost!');
                 setState(prevState => ({ ...prevState, gameState: 'lost' }));
             }
 
             if(passed) {
                 alert('won!');
+                auth.loggedUser.addGamePlayed(gameWord || {id: -1, word}, true, tries.length);
                 setState(prevState => ({ ...prevState, gameState: 'won' }));
             }
         } else {

@@ -1,10 +1,12 @@
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { auth } from './core/services/auth';
+import { worker } from './mocks/browser';
 import reportWebVitals from './reportWebVitals';
 import './styles/main.scss';
-import { worker } from './mocks/browser';
 
 (async function Main(): Promise<void> {
+  auth.Init();
 
   // TODO: create env variables to move mocks only to dev
   await worker.start();

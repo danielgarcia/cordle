@@ -13,6 +13,16 @@
         color: $black;
         width: 500px;
         
+        h2 {
+            text-align: center;
+            font-size: 30px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border-bottom: 1px solid lightgray;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
         h3 {
             font-weight: 700;
             font-size: 14px;

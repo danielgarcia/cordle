@@ -6,6 +6,7 @@ import { getWord } from '../../usecases/getWord';
 import { checkWord } from '../../usecases/checkWord';
 import { checkIfWordIsReal } from '../../usecases/checkIfWordIsReal';
 import { auth } from '../../core/services/auth';
+import { showGameStats } from '../../core/modals/ShowGameStats';
 
 
 interface State {
@@ -82,6 +83,15 @@ export default function Game(): JSX.Element {
     }
 
     /**
+     * Resets the Game and gets a new word.
+     * @returns {Promise<void>} Promise<void>
+     */
+    async function resetGame(): Promise<void> {
+        const { wordID, err } = await getWord();
+        setState(prevState => ({ ...prevState, wordID, word: '', tries: [], triesResult: [], checking: false, loading: false, usedLetters: {}, gameState: 'playing' }));
+    }
+
+    /**
      * It adds the new used letters to the usedLetters object.
      * @param {UsedLetters} newLetters new used letter by the user.
      * @returns {UsedLetters} all the letters the user has used.
@@ -126,14 +136,18 @@ export default function Game(): JSX.Element {
 
             if(!passed && tries.length === maxGuesses) {
                 auth.loggedUser.addGamePlayed(gameWord || {id: -1, word}, false, 6);
-                alert('lost!');
-                setState(prevState => ({ ...prevState, gameState: 'lost' }));
+                setTimeout(() => {
+                    showGameStats('You Lost');
+                    setState(prevState => ({ ...prevState, gameState: 'lost' }));
+                }, 1500);
             }
 
             if(passed) {
-                alert('won!');
                 auth.loggedUser.addGamePlayed(gameWord || {id: -1, word}, true, tries.length);
-                setState(prevState => ({ ...prevState, gameState: 'won' }));
+                setTimeout(() => {
+                    showGameStats('You Won!', true);
+                    setState(prevState => ({ ...prevState, gameState: 'won' }));
+                }, 1500);
             }
         } else {
             setState(prevState => ({ ...prevState, notAWord: true }));
@@ -178,6 +192,8 @@ export default function Game(): JSX.Element {
             </div>
 
             <Keyboard onKeyPress={(key: string) => handleKeyPress(key)} usedLetters={state.usedLetters} />
+
+            {state.gameState !== 'playing' && <button type='button' className='reset-game' onClick={resetGame}>New Game?</button>}
         </div>
     );
 }

@@ -1,10 +1,14 @@
 import * as React from 'react';
+import Confetti from 'react-confetti'
 import { showModal, closeModal } from './showModal';
 import { auth } from '../services/auth';
 
-const showGameStats = async (): Promise<void> => {
+
+const showGameStats = async (message?: string, showConffeti?: boolean): Promise<void> => {
     const gameStatsBody: JSX.Element = (
         <div className="body">
+            {message && <h2>{message}</h2>}
+            {showConffeti && <Confetti width={window.innerWidth} height={window.innerHeight} />}
             <h3>STATISTICS</h3>
             <ul className='stats'>
                 <li><span className='number'>{auth.loggedUser.gamesPlayed}</span><span className='text'>Played</span></li>

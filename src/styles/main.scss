@@ -8,6 +8,9 @@
 // Base Styles
 @import './base/global';
 
+// Global Components
+@import './components/button';
+
 // Application Pages
 @import '../pages/Game/Game';
 @import '../pages/Welcome/Welcome';

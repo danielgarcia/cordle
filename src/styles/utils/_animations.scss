@@ -25,3 +25,37 @@
         transform: scaleY(1);
     }
 }
+
+@keyframes glitch {
+    0% {
+        background-image: url('/assets/wordle-glitch.png');
+    }
+
+    10% {
+        background-image: url('/assets/wordle-glitch1.png');
+    }
+  
+    20% {
+        background-image: url('/assets/wordle-glitch2.png');
+    }
+  
+    30% {
+        background-image: url('/assets/wordle-glitch3.png');
+    }
+  
+    70% {
+        background-image: url('/assets/cordle-glitch.png');
+    }
+  
+    80% {
+        background-image: url('/assets/cordle-glitch1.png');
+    }
+  
+    90% {
+        background-image: url('/assets/cordle-glitch2.png');
+    }
+  
+    100% {
+        background-image: url('/assets/cordle-glitch3.png');
+    }
+}

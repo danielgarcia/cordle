@@ -22,8 +22,6 @@
             height: 58px;
             border-radius: 4px;
             cursor: pointer;
-            -webkit-user-select: none;
-            -moz-user-select: none;
             user-select: none;
             background-color: #d3d6da;
             color: $black;
@@ -33,6 +31,11 @@
             align-items: center;
             text-transform: uppercase;
             -webkit-tap-highlight-color: rgba(0,0,0,.3);
+            transition: box-shadow $average ease;
+    
+            &:active {
+                box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.2);
+            }
 
             &.correct {
                 border: none;

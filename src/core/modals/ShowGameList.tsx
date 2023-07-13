@@ -2,12 +2,16 @@ import { auth } from '../services/auth';
 import { closeModal, showModal } from './showModal';
 
 const showGameList = async (): Promise<void> => {
-
+    /**
+     * Renders the games the user has played.
+     * @returns {JSX.Element[]} list of games played.
+     */
     const renderGameList = (): JSX.Element[] => {
+        const { pastWords } = auth.loggedUser;
         let words = [];
-        if(!auth.loggedUser.pastWords.length) words.push(<li className='empty'>No games have been played yet.</li>)
+        if(!pastWords.length) words.push(<li className='empty'>No games have been played yet.</li>);
 
-        words = auth.loggedUser.pastWords.reverse().map((pastWord) => (
+        words = pastWords.reverse().map((pastWord) => (
             <li className={`word ${pastWord.won? 'correct' : 'incorrect'}`}>
                 <p>
                     <span className='text'>ID</span>
@@ -27,6 +31,8 @@ const showGameList = async (): Promise<void> => {
                 </p>
             </li>
         ));
+
+        if(!pastWords.length) words.push(<li className='empty'>No games have been played yet.</li>);
 
         return words;
     }

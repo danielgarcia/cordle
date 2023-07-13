@@ -11,7 +11,6 @@ interface ModalProps {
 class Modal extends React.Component<ModalProps> {
     public constructor(props: ModalProps) {
         super(props);
-
         this.onCloseClicked = this.onCloseClicked.bind(this);
     }
 
@@ -20,13 +19,9 @@ class Modal extends React.Component<ModalProps> {
      * @returns {void}
      */
     private onCloseClicked(): void {
-        if (this.props.disableClose) {
-            return;
-        }
+        if (this.props.disableClose) return;
 
-        if (this.props.onClose) {
-            this.props.onClose();
-        }
+        if (this.props.onClose) this.props.onClose();
     }
 
     // #region Render Methods

@@ -1,7 +1,5 @@
-import { Word } from "./CordleTypes";
+import { Word, PastWord } from "./CordleTypes";
 import { saveUserInfo } from "../usecases/saveUserInfo";
-
-type PastWord = { id: number; word: string; guesses: number; won: boolean}
 
 /**
  * IUser interface.
@@ -39,14 +37,19 @@ export class User {
 
     public pastWords: PastWord[] = [];
 
-    public addGamePlayed(gameWord: Word, won: boolean, guesses: number) {
+    /**
+     * Saves the users finished game.
+     * @param {Word} gameWord the word that the user was playing
+     * @param {boolean} won if the user won or not
+     * @param {number} guesses how many guesses did the user took
+     * @returns {void}
+     */
+    public addGamePlayed(gameWord: Word, won: boolean, guesses: number): void {
         const pastWord: PastWord = { id: gameWord.id, won, guesses, word: gameWord.word };
         this.pastWords.push(pastWord);
         this.gamesPlayed = this.gamesPlayed + 1;
 
-        if(!won) {
-            this.currentStreak = 0;
-        }
+        if(!won) this.currentStreak = 0;
 
         if(won) {
             this.wins = this.wins + 1;

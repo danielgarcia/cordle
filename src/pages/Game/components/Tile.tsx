@@ -1,4 +1,3 @@
-import React from 'react';
 import { LetterState } from '../../../core/CordleTypes';
 
 interface Props {

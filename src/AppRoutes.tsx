@@ -20,6 +20,7 @@ export default function AppRoutes() {
                     <Route path={'/'} element={< AppFrame />}>
                         <Route path={routes.Welcome.route} element={<Welcome />} />
                         <Route path={routes.Game.route} element={<Game />} />
+                        <Route path={'*'} element={<Welcome />}/>
                     </Route>
                 </Route>
             </Routes>

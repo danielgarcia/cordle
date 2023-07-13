@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Row from './components/Row';
-import Keyboard from './components/Keyboard';
-import { UsedLetters, GameState, LetterState } from '../../core/CordleTypes';
-import { getWord } from '../../usecases/getWord';
-import { checkWord } from '../../usecases/checkWord';
-import { checkIfWordIsReal } from '../../usecases/checkIfWordIsReal';
-import { auth } from '../../core/services/auth';
+import { useCallback, useEffect, useState } from 'react';
+import { GameState, LetterState, UsedLetters } from '../../core/CordleTypes';
+import { config } from '../../core/config';
 import { showGameStats } from '../../core/modals/ShowGameStats';
-
+import { showUnexpectedError } from '../../core/modals/ShowUnexpectedError';
+import { auth } from '../../core/services/auth';
+import { checkIfWordIsReal } from '../../usecases/checkIfWordIsReal';
+import { checkWord } from '../../usecases/checkWord';
+import { getWord } from '../../usecases/getWord';
+import Keyboard from './components/Keyboard';
+import Row from './components/Row';
 
 interface State {
     wordID: number;
@@ -15,8 +16,6 @@ interface State {
     tries: string[];
     triesResult: LetterState[][];
     maxGuesses: number;
-    checking: boolean;
-    loading: boolean;
     usedLetters: UsedLetters;
     gameState: GameState;
     notAWord: boolean;
@@ -28,9 +27,7 @@ export default function Game(): JSX.Element {
         word: '',
         tries: [],
         triesResult: [],
-        maxGuesses: 6,
-        checking: false,
-        loading: false,
+        maxGuesses: config.gameMaxGuesses,
         usedLetters: {},
         gameState: 'playing',
         notAWord: false,
@@ -43,13 +40,13 @@ export default function Game(): JSX.Element {
         // Need to fetch the word id
         async function fetchData(): Promise<void> {;
             const { wordID, err } = await getWord();
+            if(err) { showUnexpectedError(err, 503); return; }
+
             setState(prevState => ({ ...prevState, wordID }));
         }
         
         // only fetch once.
-        if(!state.wordID) {
-            fetchData().catch();
-        }
+        if(!state.wordID) fetchData().catch();
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener("keydown", handleKeyDown);
@@ -65,7 +62,6 @@ export default function Game(): JSX.Element {
         if(tries.length === maxGuesses || gameState !== 'playing') return;
 
         if(key === 'Enter' && word.length === 5) {
-            setState(prevState => ({ ...prevState, checking: true }));
             checkIfWordIsCorrect();
             return;
         }
@@ -88,11 +84,13 @@ export default function Game(): JSX.Element {
      */
     async function resetGame(): Promise<void> {
         const { wordID, err } = await getWord();
-        setState(prevState => ({ ...prevState, wordID, word: '', tries: [], triesResult: [], checking: false, loading: false, usedLetters: {}, gameState: 'playing' }));
+        if(err) { showUnexpectedError(err, 503); return; }
+    
+        setState(prevState => ({ ...prevState, wordID, word: '', tries: [], triesResult: [], usedLetters: {}, gameState: 'playing' }));
     }
 
     /**
-     * It adds the new used letters to the usedLetters object.
+     * It adds the new used letters to the game usedLetters object.
      * @param {UsedLetters} newLetters new used letter by the user.
      * @returns {UsedLetters} all the letters the user has used.
      */
@@ -121,7 +119,9 @@ export default function Game(): JSX.Element {
         const { exists } = await checkIfWordIsReal(word);
         if (exists) {
             const { result, passed, gameWord, err } = await checkWord(wordID, word, tries.length + 1);
+            if(err) { showUnexpectedError(err, 503); return; }
 
+            // we take the word and split the characters to keep track of the used letters.
             const usedLetters: UsedLetters = {};
             usedLetters[word[0]] = result[0];
             usedLetters[word[1]] = result[1];
@@ -132,24 +132,29 @@ export default function Game(): JSX.Element {
             tries.push(word);
             triesResult.push(result);
 
-            setState(prevState => ({ ...prevState, word: '', tries, triesResult, checking: false, usedLetters: processUsedLetters(usedLetters) }));
+            setState(prevState => ({ ...prevState, word: '', tries, triesResult, usedLetters: processUsedLetters(usedLetters) }));
 
+            // User ran out of tries
             if(!passed && tries.length === maxGuesses) {
                 auth.loggedUser.addGamePlayed(gameWord || {id: -1, word}, false, 6);
+                // a 1.5 second delay to let other animaitons run.
                 setTimeout(() => {
                     showGameStats('You Lost');
                     setState(prevState => ({ ...prevState, gameState: 'lost' }));
                 }, 1500);
             }
 
+            // User got the correct word.
             if(passed) {
                 auth.loggedUser.addGamePlayed(gameWord || {id: -1, word}, true, tries.length);
+                // a 1.5 second delay to let other animaitons run.
                 setTimeout(() => {
                     showGameStats('You Won!', true);
                     setState(prevState => ({ ...prevState, gameState: 'won' }));
                 }, 1500);
             }
         } else {
+            // show and remove an error that the word does not exists in the dictionary.
             setState(prevState => ({ ...prevState, notAWord: true }));
             setTimeout(()=> {
                 setState(prevState => ({ ...prevState, notAWord: false }));
@@ -165,19 +170,19 @@ export default function Game(): JSX.Element {
         const { tries, maxGuesses, word, notAWord, triesResult } = state;
         const element: JSX.Element[] = [];
         for (let i = 0; i < maxGuesses; i++) {  
-            // current try
+            // Current state: the playing row
             if((!tries[i] && tries[i - 1]) || (!tries[i] && i === 0)) {
                 element.push(<Row word={word} wordResult={triesResult[i]} key={`game-row-${i}`} error={notAWord} />);
                 continue;
             }
             
-            // empty state
+            // Empty state: an empty row
             if(!tries[i]) {
                 element.push(<Row word='' wordResult={[]} key={`game-row-${i}`} />);
                 continue;
             }
 
-            // locked state
+            // Locked state: a finished row
             element.push(<Row word={tries[i]} wordResult={triesResult[i]} key={`game-row-${i}`} />);
         }
 

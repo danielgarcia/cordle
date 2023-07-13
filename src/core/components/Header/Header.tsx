@@ -14,6 +14,8 @@ export default function Header({ setDarkTheme, isDarkTheme } : Props) {
     const [ glitch, setGlitch ] = useState<boolean>(false);
 
     useEffect(() => {
+        // every 8 seconds we might or might not show the log glitch effect
+        // TODO: Make this glitch a Lottie animation
         const glitchInterval = setInterval(() => {
             const random_boolean = Math.random() < 0.5;
             if(random_boolean) {
@@ -31,9 +33,11 @@ export default function Header({ setDarkTheme, isDarkTheme } : Props) {
                 <div className="knobs"><span /></div>
                 <div className="layer" />
             </div>
+            
             <div className="logo">
                 <Link to={routes.Welcome.route}><span className={`glitchy-logo ${glitch? 'glitch' : ''}`} title={`${glitch? 'Wordle' : 'Cordle'}`} /></Link>
             </div>
+
             <ul className="nav-menu">
                 <li><i className="icon-info" onClick={() => showGameInstructions()} title="How to Play" /></li>
                 <li><i className="icon-list" onClick={() => showGameList()} title="Game History" /></li>

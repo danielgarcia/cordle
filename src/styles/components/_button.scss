@@ -25,4 +25,11 @@ a.button {
         background: $black;
         color: $white;
     }
+
+    &.small {
+        height: 24px;
+        line-height: 20px;
+        font-size: 11px;
+        padding: 0 12px;
+    }
 }

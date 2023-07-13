@@ -6,7 +6,7 @@ header {
     height: $header-height;
     z-index: 100;
     background: $white;
-    border-bottom: 1px solid #d3d6da;
+    border-bottom: 1px solid $color-border;
 
     .logo {
         display: block;

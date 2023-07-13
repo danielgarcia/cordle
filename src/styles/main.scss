@@ -6,6 +6,8 @@
 @import './base/reset';
 
 // Base Styles
+@import './base/fonts';
+@import './base/icons';
 @import './base/global';
 
 // Global Components
@@ -23,3 +25,4 @@
 // Application Modals
 @import '../core/modals/ShowGameInstructions';
 @import '../core/modals/ShowGameStats';
+@import '../core/modals/ShowGameList';

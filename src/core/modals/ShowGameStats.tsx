@@ -1,15 +1,17 @@
-import * as React from 'react';
-import Confetti from 'react-confetti'
-import { showModal, closeModal } from './showModal';
+import Confetti from 'react-confetti';
+import { clearUserInfo } from '../../usecases/clearUserInfo';
 import { auth } from '../services/auth';
-
+import { closeModal, showModal } from './showModal';
 
 const showGameStats = async (message?: string, showConffeti?: boolean): Promise<void> => {
     const gameStatsBody: JSX.Element = (
         <div className="body">
             {message && <h2>{message}</h2>}
+            
             {showConffeti && <Confetti width={window.innerWidth} height={window.innerHeight} />}
+            
             <h3>STATISTICS</h3>
+            
             <ul className='stats'>
                 <li><span className='number'>{auth.loggedUser.gamesPlayed}</span><span className='text'>Played</span></li>
                 <li><span className='number'>{auth.loggedUser.winPercent || 0}</span><span className='text'>Win %</span></li>
@@ -26,6 +28,8 @@ const showGameStats = async (message?: string, showConffeti?: boolean): Promise<
                 <li><div className='guesses'>5</div> <div className='bar-frame'><div className='bar' style={{width: `${auth.loggedUser.guessDistribution(4)}%`}} title={`${auth.loggedUser.winDistribution[4]} games`}> {auth.loggedUser.guessDistribution(4)}%</div></div></li>
                 <li><div className='guesses'>6</div> <div className='bar-frame'><div className='bar' style={{width: `${auth.loggedUser.guessDistribution(5)}%`}} title={`${auth.loggedUser.winDistribution[5]} games`}> {auth.loggedUser.guessDistribution(5)}%</div></div></li>
             </ul>
+
+            {auth.loggedUser.gamesPlayed > 0 && <button type='button' className='button black small clear-data' onClick={()=>{clearUserInfo();closeModal();}}>Clear Data</button>}
         </div>
     );
 

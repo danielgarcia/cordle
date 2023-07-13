@@ -8,9 +8,25 @@ An awesome application that might or might not be like wordle.
 
 ## Run Localy: On mac or linux you can run this local by doing the following:
 1. Install Node
-2. Unzip folder
-3. Open a terminal
-4. Go to the folder
-5. Run: npm install
-6. Run: npm start
-7. You are done, use http://localhost:3000/
+2. Install git
+3. Open a terminal and run:
+```
+$ git clone https://github.com/danielgarcia/Book-Search
+$ cd Book-Search
+$ npm install
+```
+
+### To run the App
+```
+$ npm start
+```
+
+### To build the App
+```
+$ npm run build
+```
+
+### To run the App Tests
+```
+$ npm run test
+```

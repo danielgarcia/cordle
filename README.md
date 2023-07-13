@@ -11,8 +11,8 @@ An awesome application that might or might not be like wordle.
 2. Install git
 3. Open a terminal and run:
 ```
-$ git clone https://github.com/danielgarcia/Book-Search
-$ cd Book-Search
+$ git clone https://github.com/danielgarcia/cordle.git
+$ cd cordle
 $ npm install
 ```
 

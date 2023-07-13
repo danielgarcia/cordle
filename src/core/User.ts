@@ -46,13 +46,12 @@ export class User {
 
         if(!won) {
             this.currentStreak = 0;
-            this.wins = 0;
         }
 
         if(won) {
             this.wins = this.wins + 1;
             this.currentStreak = this.currentStreak + 1;
-            this.winDistribution[guesses] = this.winDistribution[guesses] + 1;
+            this.winDistribution[guesses - 1] = this.winDistribution[guesses - 1] + 1;
         }
 
         if(this.currentStreak > this.maxStreak) this.maxStreak = this.currentStreak;
@@ -69,11 +68,12 @@ export class User {
     }
 
     /**
-     * Return the user winning percent.
+     * Return the user winning distribution of guesses.
      * @param {number} guesses the guess amount.
      * @returns {number} distribution percent.
      */
     public guessDistribution(guess: number): number {
-        return Number((this.winDistribution[guess] / this.gamesPlayed * 100).toFixed(1)) || 0;
+        console.log(this.wins)
+        return Number(((this.winDistribution[guess - 1] / this.wins) * 100).toFixed(1)) || 0;
     }
 }

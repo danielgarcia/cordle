@@ -7,7 +7,7 @@ const showGameList = async (): Promise<void> => {
         let words = [];
         if(!auth.loggedUser.pastWords.length) words.push(<li className='empty'>No games have been played yet.</li>)
 
-        words = auth.loggedUser.pastWords.map((pastWord) => (
+        words = auth.loggedUser.pastWords.reverse().map((pastWord) => (
             <li className={`word ${pastWord.won? 'correct' : 'incorrect'}`}>
                 <p>
                     <span className='text'>ID</span>

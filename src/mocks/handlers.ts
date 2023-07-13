@@ -28,7 +28,7 @@ export const handlers = [
             ctx.json({
                 result,
                 passed,
-                gameWord: payload.guesses === 6 ? gameWordObject : undefined,
+                gameWord: payload.guesses === 6 || passed ? gameWordObject : undefined,
             }),
         )
     }),

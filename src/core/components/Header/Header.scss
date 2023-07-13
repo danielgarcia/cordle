@@ -31,4 +31,22 @@ header {
             animation: glitch 4s ease infinite;
         }
     }
+
+    .nav-menu {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 150px;
+        height: 100%;
+        line-height: 66px;
+        font-size: 20px;
+        li {
+            width: 33%;
+            float: left;
+            display: block;
+            i {
+                cursor: pointer;
+            }
+        }
+    }
 }

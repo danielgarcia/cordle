@@ -25,9 +25,9 @@ export default function Header() {
                 <Link to={routes.Welcome.route}><span className={`glitchy-logo ${glitch? 'glitch' : ''}`} title={`${glitch? 'Wordle' : 'Cordle'}`} /></Link>
             </div>
             <ul className="nav-menu">
-                <li><i className="icon-info" onClick={() => showGameInstructions()} /></li>
-                <li><i className="icon-list" onClick={() => showGameList()} /></li>
-                <li><i className="icon-stats-dots" onClick={() => showGameStats()}/></li>
+                <li><i className="icon-info" onClick={() => showGameInstructions()} title="How to Play" /></li>
+                <li><i className="icon-list" onClick={() => showGameList()} title="Game History" /></li>
+                <li><i className="icon-stats-dots" onClick={() => showGameStats()} title='Statistics' /></li>
             </ul>
         </header>
     );

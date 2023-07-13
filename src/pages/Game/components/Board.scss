@@ -94,3 +94,29 @@
         }
     }
 }
+
+// Dark Theme
+.app-frame.dark-theme .board  {
+    .board-tile {
+        background-color: $dark-theme-bg;
+        color: $white;
+        border-color: $dark-theme-grey;
+
+        &.has-letter {
+            border-color: $black;
+        }
+
+        &.correct {
+            color: $white;
+            background-color: $color-correct;
+        }
+        &.maybe {
+            color: $white;
+            background-color: $color-maybe;
+        }
+        &.wrong {
+            color: $white;
+            background-color: $color-wrong;
+        }
+    }
+}

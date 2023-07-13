@@ -5,7 +5,12 @@ import { showGameInstructions } from '../../modals/ShowGameInstructions';
 import { showGameList } from '../../modals/ShowGameList';
 import { showGameStats } from '../../modals/ShowGameStats';
 
-export default function Header() {
+interface Props {
+    setDarkTheme: React.Dispatch<React.SetStateAction<boolean>>;
+    isDarkTheme: boolean;
+}
+
+export default function Header({ setDarkTheme, isDarkTheme } : Props) {
     const [ glitch, setGlitch ] = useState<boolean>(false);
 
     useEffect(() => {
@@ -21,6 +26,11 @@ export default function Header() {
 
     return (
         <header>
+            <div className="theme-switch">
+                <input type="checkbox" className="checkbox" onChange={()=> setDarkTheme(!isDarkTheme)} value={isDarkTheme? 1 : 0} />
+                <div className="knobs"><span /></div>
+                <div className="layer" />
+            </div>
             <div className="logo">
                 <Link to={routes.Welcome.route}><span className={`glitchy-logo ${glitch? 'glitch' : ''}`} title={`${glitch? 'Wordle' : 'Cordle'}`} /></Link>
             </div>

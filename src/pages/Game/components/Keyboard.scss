@@ -62,3 +62,13 @@
         }
     }
 }
+
+// Dark Theme
+.app-frame.dark-theme .game-keyboard  {
+    .game-keyboard-row {
+        .game-keyboard-key {
+            background-color: #818384;
+            color: $white;
+        }
+    }
+}

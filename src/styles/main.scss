@@ -1,12 +1,29 @@
 // Global Utils
 @import './utils/variables';
+@import './utils/animations';
 
 // Resets styles to control the style base across browsers
 @import './base/reset';
 
 // Base Styles
+@import './base/fonts';
+@import './base/icons';
 @import './base/global';
+
+// Global Components
+@import './components/button';
 
 // Application Pages
 @import '../pages/Game/Game';
 @import '../pages/Welcome/Welcome';
+
+// Application Components
+@import '../core/components/AppFrame/AppFrame';
+@import '../core/components/Modal/Modal';
+@import '../core/components/Header/Header';
+
+// Application Modals
+@import '../core/modals/ShowGameInstructions';
+@import '../core/modals/ShowGameStats';
+@import '../core/modals/ShowGameList';
+@import '../core/modals/ShowUnexpectedError';

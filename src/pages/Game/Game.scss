@@ -1,2 +1,37 @@
+@import './components/Board';
+@import './components/Keyboard';
+
 .game-page {
+    width: 100%;
+    max-width: 500px;
+    max-height: 500px;
+    margin: 0 auto;
+    height: calc(100% - $header-height);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+    button.reset-game {
+        font-size: 1.25em;
+        font-weight: bold;
+        border: 0;
+        height: 58px;
+        border-radius: 4px;
+        cursor: pointer;
+        user-select: none;
+        background-color: $blue;
+        color: $white;
+        padding: 20px;
+        text-transform: uppercase;
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+        transition: box-shadow $average ease;
+
+        &:active {
+            box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+    }
 }

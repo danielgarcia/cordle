@@ -1,2 +1,14 @@
 .welcome-page {
+    text-align: center;
+
+    img {
+        width: 150px;
+        height: 150px;
+    }
+
+    a {
+        display: block;
+        width: 300px;
+        margin: 20px auto;
+    }
 }

@@ -1,0 +1,103 @@
+.modal.game-stats-modal {
+    z-index: 10000000;
+
+    .frame {
+        max-width: 500px;
+        background: $white;
+    }
+
+    .body {
+        text-align: left;
+        padding: 50px;
+        background: $white;
+        color: $black;
+        width: 500px;
+        
+        h2 {
+            text-align: center;
+            font-size: 30px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border-bottom: 1px solid lightgray;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin: 10px 0;
+            line-height: 18px;
+            margin-bottom: 20px;
+        }
+
+        ul.stats {
+            margin-bottom: 20px;
+            display: inline-block;
+            width: 100%;
+            li {
+                width: 25%;
+                display: block;
+                float: left;
+                .number {
+                    font-weight: 400;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    letter-spacing: .05em;
+                    font-variant-numeric: proportional-nums;
+                    line-height: 34px;
+                    font-size: 44px;
+                }
+                .text {
+                    font-size: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    line-height: 14px;
+                    letter-spacing: .1em;
+                    margin-top: 10px;
+                }
+            }
+        }
+
+        ul.graphs {
+            li {
+                margin-bottom: 15px;
+                .guesses {
+                    width: 15px;
+                    float: left;
+                    font-weight: bold;
+                }
+
+                .bar-frame {
+                    width: calc(100% - 15px);
+                    float: left;
+                    height: 20px;
+                    
+                    .bar {
+                        background: $color-correct;
+                        font-weight: bold;
+                        text-align: right;
+                        color: $white;
+                        font-weight: bold;
+                        height: 15px;
+                        font-size: 12px;
+                        line-height: 15px;
+                        padding-right: 5px;
+                        min-width: 30px;
+                    }
+                }
+            }
+        }
+
+        .clear-data {
+            margin: auto;
+            display: block;
+        }
+    }
+}

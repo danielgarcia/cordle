@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GameState, LetterState, UsedLetters } from '../../core/CordleTypes';
 import { config } from '../../core/config';
 import { showGameStats } from '../../core/modals/ShowGameStats';
@@ -33,9 +33,6 @@ export default function Game(): JSX.Element {
         notAWord: false,
     });
 
-    // eslint-disable-next-line
-    const handleKeyDown = useCallback((event: KeyboardEvent) => handleKeyPress(event.key), [handleKeyPress, state]);
-
     useEffect(() => {
         // Need to fetch the word id
         async function fetchData(): Promise<void> {;
@@ -47,10 +44,7 @@ export default function Game(): JSX.Element {
         
         // only fetch once.
         if(!state.wordID) fetchData().catch();
-
-        window.addEventListener('keydown', handleKeyDown)
-        return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [handleKeyDown, state.wordID ]);
+    }, [state.wordID ]);
 
     /**
      * handles the pressing of a keyboard key.
@@ -172,7 +166,7 @@ export default function Game(): JSX.Element {
         for (let i = 0; i < maxGuesses; i++) {  
             // Current state: the playing row
             if((!tries[i] && tries[i - 1]) || (!tries[i] && i === 0)) {
-                element.push(<Row word={word} wordResult={triesResult[i]} key={`game-row-${i}`} error={notAWord} />);
+                element.push(<Row word={word} wordResult={triesResult[i]} key={`game-row-${i}`} error={notAWord} playingRow />);
                 continue;
             }
             
